@@ -1,16 +1,3 @@
-# QUICK START GUIDE - What to Run First
-
-## Overview
-You have 3 files. Here's what each does and what to run:
-
-### Files You Downloaded:
-1. **A2C_PROJECT_GUIDE.md** - GUIDE (read this!)
-2. **a2c_starter_template.py** - TEMPLATE (incomplete, for you to fill)
-3. **cartpole_dqn_fixed.py** - DEMO (optional, just to see CartPole)
-4. **agent0_complete.py** - COMPLETE AGENT 0 (new - use this to start!)
-
----
-
 ## STEP-BY-STEP: What to Do Now
 
 ### Step 1: Install Required Packages (2 minutes)
