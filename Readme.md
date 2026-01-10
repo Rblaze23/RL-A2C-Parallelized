@@ -16,31 +16,14 @@ pip install gymnasium torch numpy matplotlib
 
 ---
 
-### Step 2: Test Your Setup (Optional - 1 minute)
 
-Run the DQN demo to see if everything works:
-
-```bash
-python cartpole_dqn_fixed.py
-```
-
-**What you'll see:** A pre-trained DQN agent playing CartPole (should get ~500 score)
-
-**If it fails:** You might need TensorFlow:
-```bash
-pip install tensorflow
-```
-
-**Note:** This is just a demo. Your project needs A2C, not DQN!
-
----
 
 ### Step 3: Run Agent 0 - YOUR ACTUAL PROJECT STARTS HERE (5-10 minutes)
 
 This is the COMPLETE implementation of Agent 0 that you can run right now:
 
 ```bash
-python agent0_complete.py
+python agent0.py
 ```
 
 **What this does:**
