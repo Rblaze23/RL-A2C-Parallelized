@@ -53,6 +53,13 @@ class ActorCriticNetwork(nn.Module):
         return action_probs, state_value
 
 
+
+def apply_stochastic_reward(reward, mask_probability=0.9):
+    """Apply 90% reward masking to test robustness."""
+    if np.random.random() < mask_probability:
+        return 0.0
+    else:
+        return reward / (1 - mask_probability)
 # ============================================================================
 # AGENT 2: K=6 PARALLEL WORKERS
 # ============================================================================
@@ -225,7 +232,7 @@ class A2CAgent_K6:
             # Step all environments
             next_states, rewards, terminateds, truncateds, infos = self.envs.step(actions)
             dones = np.logical_or(terminateds, truncateds)
-            
+            rewards = np.array([apply_stochastic_reward(r) for r in rewards])
             # Compute targets with correct bootstrapping
             targets = self.compute_targets(rewards, next_states, terminateds, truncateds)
             
@@ -317,7 +324,6 @@ class A2CAgent_K6:
     def close(self):
         """Close the vectorized environments."""
         self.envs.close()
-
 
 # ============================================================================
 # MULTI-SEED EXPERIMENT
@@ -461,13 +467,25 @@ def plot_aggregated_results(results, save_dir='results'):
     
     # Plot 6: Value functions
     ax = axes[1, 2]
-    for i, values in enumerate(all_values):
-        ax.plot(values, alpha=0.7, label=f'Seed {seeds[i]}')
     if all_values:
-        mean_values = np.mean(all_values, axis=0)
+        # Handle different trajectory lengths
+        max_len = max(len(v) for v in all_values)
+        padded_values = []
+        for values in all_values:
+            padded = np.full(max_len, np.nan)
+            padded[:len(values)] = values
+            padded_values.append(padded)
+        
+        # Plot individual trajectories
+        for i, values in enumerate(all_values):
+            ax.plot(values, alpha=0.7, label=f'Seed {seeds[i]}')
+        
+        # Plot mean (ignoring NaNs)
+        mean_values = np.nanmean(padded_values, axis=0)
         ax.plot(mean_values, 'k--', linewidth=2, label='Mean')
-        ax.axhline(y=np.mean(mean_values), color='red', 
-                  linestyle='--', label=f'Mean: {np.mean(mean_values):.2f}')
+        ax.axhline(y=np.nanmean(mean_values), color='red', 
+                  linestyle='--', label=f'Mean: {np.nanmean(mean_values):.2f}')
+    
     ax.set_xlabel('Step in Episode')
     ax.set_ylabel('V(s)')
     ax.set_title('Agent 2: Value Function')

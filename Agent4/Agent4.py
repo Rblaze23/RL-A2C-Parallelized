@@ -47,7 +47,12 @@ class ActorCriticNetwork(nn.Module):
         state_value = self.critic(shared_features)
         return action_probs, state_value
 
-
+def apply_stochastic_reward(reward, mask_probability=0.9):
+    """Apply 90% reward masking to test robustness."""
+    if np.random.random() < mask_probability:
+        return 0.0
+    else:
+        return reward / (1 - mask_probability)
 # ============================================================================
 # AGENT 4
 # ============================================================================
@@ -171,6 +176,10 @@ class Agent4:
                 
                 # Step environments
                 next_states, rewards, terminateds, truncateds, _ = self.envs.step(actions)
+                
+                # Apply reward masking
+                rewards = np.array([apply_stochastic_reward(r) for r in rewards])
+                
                 dones = np.logical_or(terminateds, truncateds)
                 
                 # Store in buffers
