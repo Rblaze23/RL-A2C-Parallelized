@@ -16,7 +16,6 @@
 - [Agent 4 — Combined K×n](#agent-4--k6--n6-combined)
 - [Installation](#installation)
 - [Running the Experiments](#running-the-experiments)
-- [Architecture & Hyperparameters](#architecture--hyperparameters)
 - [Key Findings](#key-findings)
 - [Project Structure](#project-structure)
 
@@ -265,38 +264,6 @@ Results are automatically saved as `.pkl` files and `.png` plots in each agent's
 
 ---
 
-## Architecture & Hyperparameters
-
-All agents share the same network architecture and base hyperparameters:
-
-```
-Input (4) → Linear(64) → Tanh → Linear(64) → Tanh → Actor head (2 logits)
-                                                    ↘ Critic head (1 scalar)
-```
-
-| Hyperparameter | Value |
-|---|:---:|
-| Hidden size | 64 |
-| Activation | Tanh |
-| Actor learning rate | 1e-5 |
-| Critic learning rate | 1e-3 |
-| Discount factor γ | 0.99 |
-| Max training steps | 500k |
-| Evaluation interval | 20k steps |
-| Evaluation episodes | 10 (greedy) |
-| Seeds | 3 per agent |
-
-Agent-specific parameters:
-
-| Agent | K (workers) | n (steps) | p_mask | Batch size |
-|-------|:-----------:|:---------:|:------:|:----------:|
-| 0 | 1 | 1 | — | 1 |
-| 1 | 1 | 1 | 0.9 | 1 |
-| 2 | 6 | 1 | — | 6 |
-| 3 | 1 | 6 | — | ≤6 |
-| 4 | 6 | 6 | — | 36 |
-
----
 
 ## Key Findings
 
@@ -351,4 +318,4 @@ The gradient variance scales as `σ²/B` where B is batch size. With B=36 (Agent
 
 ---
 
-*Reinforcement Learning course — Prof. Moalla · Université Dauphine Tunis · January 2026*
+*Reinforcement Learning course — Prof. Moalla · Université Dauphine Tunis · January 2026 BY Chiheb Guesmi and Ramy Lazghab*
